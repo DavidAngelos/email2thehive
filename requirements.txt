@@ -1,0 +1,10 @@
+argparse
+configparser
+imaplib2
+gnupg
+datetime
+requests
+uuid
+python-magic
+thehive4py
+extract_msg
