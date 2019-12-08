@@ -23,3 +23,6 @@ optional arguments:
 
 # Observables Whitelisting
 The script is able to extract observables (emails, URLs, files, hashes). To avoid too many false positives, it is possible to create whitelists (based on regular expressions). See the file email2thehive.whitelists.
+
+# Credits
+Original project [imap2thehive](https://github.com/xme/dockers/tree/master/imap2thehive) which polls an IMAP4 mailbox for new emails and imports fetched messages into an instance of TheHive.
