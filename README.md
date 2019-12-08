@@ -7,8 +7,8 @@ The script is fully configurable via a Python-friendly configuration file. See e
 # Usage
 The script can be run manually to import an email file. The syntax is simple:
 ```
-# ./imap2thehive.py -h
-usage: imap2thehive.py [-h] [-v] [-c CONFIG] [-f FILEPATH]
+# ./email2thehive.py -h
+usage: email2thehive.py [-h] [-v] [-c CONFIG] [-f FILEPATH]
 
 Process an email file to create TheHive alerts/cased.
 
@@ -16,7 +16,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         verbose output
   -c CONFIG, --config CONFIG
-                        configuration file (default: /etc/imap2thehive.conf)
+                        configuration file (default: /etc/email2thehive.conf)
   -f FILEPATH, --file FILEPATH
                         email file path
 ```
