@@ -154,6 +154,17 @@ def readMsg(emailFilePath):
     # Temporary disabled
     # observables = searchObservables(headers_string, observables)
 
+    clientIp = ''
+    if 'designates ' in message.header['Received-SPF']:
+        clientIp = message.header['Received-SPF'].split('designates ', maxsplit=1)[-1].split(maxsplit=1)[0]
+    elif 'designate ' in message.header['Received-SPF']:
+        clientIp = message.header['Received-SPF'].split('designate ', maxsplit=1)[-1].split(maxsplit=1)[0]
+
+    receivedMail = re.search('<(.*)>', message.sender).group(1)
+
+    spf = clientIp + '|' + receivedMail
+
+
     body = ''
     if message.body != None:
         body = message.body
@@ -174,6 +185,8 @@ def readMsg(emailFilePath):
             log.error("Cannot dump attachment to %s: %s" % (path,e.errno))
             return False
 
+    observables.append({ 'type': 'other', 'value': spf })
+
     return fromField, subjectField, observables, body, attachments
 
 
@@ -192,6 +205,17 @@ def readEml(emailFilePath):
         subjectField = decode[0].decode(decode[1])
     else:
         subjectField = str(decode[0])
+    decode = email.header.decode_header(msg['Received-SPF'])[0]
+    if decode[1] is not None:
+        if 'designates ' in decode[0].decode(decode[1]):
+            clientIp = decode[0].decode(decode[1]).split('designates ', maxsplit=1)[-1].split(maxsplit=1)[0]
+        elif 'designate ' in decode[0].decode(decode[1]):
+            clientIp = decode[0].decode(decode[1]).split('designate ', maxsplit=1)[-1].split(maxsplit=1)[0]
+    else:
+        if 'designates ' in str(decode[0]):
+            clientIp = str(decode[0]).split('designates ', maxsplit=1)[-1].split(maxsplit=1)[0]
+        elif 'designate ' in str(decode[0]):
+            clientIp = str(decode[0]).split('designate ', maxsplit=1)[-1].split(maxsplit=1)[0]
     log.info("From: %s Subject: %s" % (fromField, subjectField))
 
     attachments = []
@@ -243,6 +267,12 @@ def readEml(emailFilePath):
                     except OSerror as e:
                         log.error("Cannot dump attachment to %s: %s" % (path,e.errno))
                         return False
+
+    receivedMail = re.search('<(.*)>', fromField).group(1)
+
+    spf = clientIp + '|' + receivedMail
+
+    observables.append({ 'type': 'other', 'value': spf })
 
     return fromField, subjectField, observables, body, attachments
 
